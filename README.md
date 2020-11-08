@@ -43,7 +43,7 @@ Counter(y_train)
 
 ## Results
 
-As identified above, we employed six different Machine Learning algorithms: 4 focused on correcting the sampling imbalance for the target variable and two to deal with the potential bias issue.  Below outlines the approach for each of the six algorithms and a description of their associated accuracy, precision, and recall scores.
+As identified above, we employed six different Machine Learning algorithms: 4 focused on correcting the sampling imbalance for the target variable and two to deal with the potential bias issue.  Both categories of approaches have their positives and negatives, but both can deal with imbalanced data and work to increase accuracy while decreasing bias.  Below outlines the approach for each of the six algorithms and a description of their associated accuracy, precision, and recall scores.
 
 
 ### Sampling + Logistic Regression
@@ -51,6 +51,7 @@ As identified above, we employed six different Machine Learning algorithms: 4 fo
 With the knowledge that there is a distinct imbalance in the target values, we need to identify the best approach to correcting for that imbalance.  We conducted four different tests of sampling approaches, and then looked for the output of both after using the sampling data as an input to building a linear regression model.  
 
 - ***Naive Random Oversampling***
+
 Using SciKit Learn’s imblearn RandomOverSampling function, we created new X and y training variables.  In doing this, we fit the ROS algorithm to the initial data, which resulted in a completely balanced new target variable count: 51366 for low_risk and 51366 for high_risk.  Of note, this type of oversampling approach takes existing data and adds it back into the training data set, thereby increasing the size of the minority class.  Below outlines the various approaches to evaluating how well this balancing approach has worked.
 
 ![Random Oversampling](https://github.com/MaureenFromuth/Credit_Risk_Analysis/blob/main/ROS.png)
@@ -87,3 +88,29 @@ Using SciKit Learn’s imblearn SMOTEENN combination sampling function, we creat
 As we can see, the balanced accuracy is the best of the models thus far with a score of .64.  Looking at the confusion matrix, the true positives increase slightly and the false negatives decreased.  The false positives, however, only decreased slightly as opposed to the Cluster Centroid undersampling approach (10002 for Cluster Centroid vs. 7305 for SMOTEENN).  As such, this model still has a significant problem identifying applicants as high risk when they actually are not.  The Classification report shows a slightly better recall for high_risk applicants as opposed to the other sampling techniques (.71 for SMOTEENN vs. .67 for CC vs. .61 for SMOTE vs. .66 for ROS).  Precision and F1 scores for high_risk, however, are the exact same as the two oversampling techniques.  
 
 *In general SMOTEEN combination sampling performed slightly better in terms of accuracy and recall than the other sampling models, but has the second worse score for false positives in predicting high_risk applications*
+
+
+### Ensemble
+
+- ***Balanced Random Forest Classifier***
+
+Using SciKit Learn’s imblearn Balanced Random Forest ensemble function, we created new X and y training variables.  This algorithm allows for us to both balance but also use an ensemble random forest approach to our predictions.  It specifically looks to increase accuracy and decrease model variance by taking multiple algorithms to create one large prediction.  Below outlines the various approaches to evaluating how well this balancing approach has worked.
+
+![Balanced Random Forest Ensemble Approach](https://github.com/MaureenFromuth/Credit_Risk_Analysis/blob/main/Random_Forest.png)
+
+As we can see, the balanced accuracy is significantly higher than any of the sampling methodologies, with a score of .7885.  Diving into the confusion matrix, the true positive and false negative values are better than the over and undersampling techniques, but only slightly worse than the SMOTEENN model.  Of note, this model has by far the lowest false positives with only 2153, which is half of the lowest sampling approach, SMOTE, which had 5317 false positives.  The precision of this model is slightly higher with a score of .03 and the recall is around the same as SMOTEENN with a score of .7.  Finally the F1 score is only slightly higher than the other models with a score of .06
+
+*In general Balanced Random Forest Ensemble performed better in terms of accuracy and precision than the other sampling models.  It also has the least number of false positives of any model without sacrificing a high true positive rate.*
+
+
+- ***Easy Ensemble AdaBoost Classifier***
+
+Using SciKit Learn’s imblearn Easy Ensemble ensemble function, we created new X and y training variables.  This algorithm allows for us to employ an adaptive boosting technique for ensemble learning, whereby the model is trained and then evaluated and uses errors from the previous model to appropriate weight them in the next model.  Below outlines the various approaches to evaluating how well this balancing approach has worked.
+
+![Easy Ensemble AdaBoost Classifier](https://github.com/MaureenFromuth/Credit_Risk_Analysis/blob/main/EEC.png)
+
+As we can see, the balanced accuracy is the highest of any of the other methodologies, with a score of .9317.  Diving into the confusion matrix, the true positive and false negative values the best of any of the other models also, with only 8 values identified as false negatives and 93 as true positives.  The true negatives are also far lower than any of the other models with only 983 identified as high_risk when in fact they are low_risk.  The precision of this model for high_risk is the highest with a score of .09, but it is still incredibly low.  The model’s recall for high_risk is also the highest of all the models with a score of .92.  Finally the F1 score is only slightly higher than the other models with a score of .16, although, it too is still low.
+
+*The Easy Ensemble AdaBoost classifier is the highest performant of all the models across all aspects, but it is still very limited in precision for predicting high_risk applicants.*
+
+
