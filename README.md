@@ -67,7 +67,6 @@ Using SciKit Learn’s imblearn SMOTE oversampling function, we created new X an
 
 As we can see, the balanced accuracy is low and nearly the same as the ROS oversampling method with a 65% probability of accurately predicting the outcomes (i.e. true positives and true negatives).  Likewise, when we look at the confusion matrix, we see the same significantly high false positive rate, and a very low precision rate for high_risk in the Classification Report (.02).  Recall, or sensitivity, for high_risk is only slightly lower with .61 for the SMOTE approach vs. .66 for ROS.  Finally, if we look at the F1 score for high_risk at .02, the exact same as ROS.
 
-*In general SMOTE oversampling performed nearly the same as ROS for precision and recall in predicting high_risk applicants*
 
 - ***Cluster Centroid Understampling***
 
@@ -77,7 +76,6 @@ Using SciKit Learn’s imblearn Cluster Centroids undersampling function, we cre
 
 As we can see, the balanced accuracy is even lower than ROS and SMOTE oversampling techniques with a score of .544 (i.e. it correctly predicts only 54.4% of the time true negatives and true positives).  When we dive deeper into the confusion matrix, we can see that the problems of false positives grows even more with this approach, with total false negatives at 10002  for Cluster Centroid unhderstampling vs. 5317 for SMOTE and 6546 for ROS.  The false negatives stay fairly consistent as do the true positives.  The Classification Report, shows a low precision rate for high_risk predictions (.01) and a slightly better recall rate for high_risk than ROS (.67 vs .66).  The f1 score is only slightly below that of ROS and SMOTE oversampling techniques.  
 
-*In general Cluster Centroid undersampling performed worse than both SMOTE and ROS for precision and recall in predicting high_risk applicants*
 
 - ***SMOTEENN Combination (Over & Under) Sampling***
 
@@ -86,8 +84,6 @@ Using SciKit Learn’s imblearn SMOTEENN combination sampling function, we creat
 ![SMOTEENN Combination Sampling](https://github.com/MaureenFromuth/Credit_Risk_Analysis/blob/main/SMOTEENN.png)
 
 As we can see, the balanced accuracy is the best of the models thus far with a score of .64.  Looking at the confusion matrix, the true positives increase slightly and the false negatives decreased.  The false positives, however, only decreased slightly as opposed to the Cluster Centroid undersampling approach (10002 for Cluster Centroid vs. 7305 for SMOTEENN).  As such, this model still has a significant problem identifying applicants as high risk when they actually are not.  The Classification report shows a slightly better recall for high_risk applicants as opposed to the other sampling techniques (.71 for SMOTEENN vs. .67 for CC vs. .61 for SMOTE vs. .66 for ROS).  Precision and F1 scores for high_risk, however, are the exact same as the two oversampling techniques.  
-
-*In general SMOTEEN combination sampling performed slightly better in terms of accuracy and recall than the other sampling models, but has the second worse score for false positives in predicting high_risk applications*
 
 
 ### Ensemble
@@ -100,8 +96,6 @@ Using SciKit Learn’s imblearn Balanced Random Forest ensemble function, we cre
 
 As we can see, the balanced accuracy is significantly higher than any of the sampling methodologies, with a score of .7885.  Diving into the confusion matrix, the true positive and false negative values are better than the over and undersampling techniques, but only slightly worse than the SMOTEENN model.  Of note, this model has by far the lowest false positives with only 2153, which is half of the lowest sampling approach, SMOTE, which had 5317 false positives.  The precision of this model is slightly higher with a score of .03 and the recall is around the same as SMOTEENN with a score of .7.  Finally the F1 score is only slightly higher than the other models with a score of .06
 
-*In general Balanced Random Forest Ensemble performed better in terms of accuracy and precision than the other sampling models.  It also has the least number of false positives of any model without sacrificing a high true positive rate.*
-
 
 - ***Easy Ensemble AdaBoost Classifier***
 
@@ -111,6 +105,18 @@ Using SciKit Learn’s imblearn Easy Ensemble ensemble function, we created new 
 
 As we can see, the balanced accuracy is the highest of any of the other methodologies, with a score of .9317.  Diving into the confusion matrix, the true positive and false negative values the best of any of the other models also, with only 8 values identified as false negatives and 93 as true positives.  The true negatives are also far lower than any of the other models with only 983 identified as high_risk when in fact they are low_risk.  The precision of this model for high_risk is the highest with a score of .09, but it is still incredibly low.  The model’s recall for high_risk is also the highest of all the models with a score of .92.  Finally the F1 score is only slightly higher than the other models with a score of .16, although, it too is still low.
 
-*The Easy Ensemble AdaBoost classifier is the highest performant of all the models across all aspects, but it is still very limited in precision for predicting high_risk applicants.*
 
+## Summary
 
+Although there are many ways to evaluate models, lenders will put a higher weight on false negatives as they do not want to provide a loan to someone who the model assesses as low risk but is actually high risk.  Therefore, we would put stronger weight on recall for high_risk rather than precision.  
+
+Overall, each of the models performed poorly in precision in predicting high_risk applicants and had a generally high number of false positives.  Below outlines a high level summary of each of the models:
+
+- *In general Random Over Sampling performed nearly the same as SMOT with regards to precision and recall in predicting high_risk applicants, with slightly better recall that ROS*
+- *In general SMOTE oversampling performed nearly the same as ROS for precision and recall in predicting high_risk applicants*
+- *In general Cluster Centroid undersampling performed worse than both SMOTE and ROS for precision and recall in predicting high_risk applicants*
+- *In general SMOTEEN combination sampling performed slightly better in terms of accuracy and recall than the other sampling models, but has the second worse score for false positives in predicting high_risk applications*
+- *In general Balanced Random Forest Ensemble performed better in terms of accuracy and precision than the other sampling models.  It also has the least number of false positives of any model without sacrificing a high true positive rate.*
+- *The Easy Ensemble AdaBoost classifier is the highest performant of all the models across all aspects, but it is still very limited in precision for predicting high_risk applicants.*
+
+If we look at each of the assessments and summaries of the models above, the Easy Ensemble AdaBoost classifier has the highest recall for high risk applicants and the highest precision, albeit being very low.  Additionally, it has the best balanced accuracy ratings as well.  Therefore, the Easy Ensemble AdaBoost classifier is the ideal model for this customer and their use case.    
